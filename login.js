@@ -28,6 +28,21 @@ loginForm.addEventListener('submit', async(e) => {
         return;
     }
 
+    // Get the user ID from the signup response
+    const userId = loginData.user?.id;
+
+    if (userId) {
+
+        // Save additional user data to "profiles" table
+        const { error: insertError } = await client
+            .from('profiles')
+            .insert([{ id: userId, email: email, name: null }]);
+
+        if (insertError) {
+            alert('Insert error: ' + insertError.message);
+        }
+    }
+    
     // In a real application, you would send this data to your server
     console.log('Login attempt:', { email, password });
 
