@@ -69,7 +69,6 @@ registerForm.addEventListener('submit', async(e) => {
     //// For demo purposes, we'll just redirect to the dashboard
     //localStorage.setItem('fengshui_user', email);
     //window.location.href = 'dashboard.html';
-});
 
     //// For demo purposes, we'll just redirect to the dashboard
     //localStorage.setItem('fengshui_user', email);
