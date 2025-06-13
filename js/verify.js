@@ -22,7 +22,6 @@ verifyForm.addEventListener('submit', async (e) => {
     if (cooldownActive) return;
 
     try {
-        debugger;
         const verEmail = document.getElementById('email').value.trim().toLowerCase();
 
         const [{ data: profileUser }, { data: pendingUser }] = await Promise.all([
