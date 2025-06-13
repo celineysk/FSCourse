@@ -42,6 +42,9 @@ verifyForm.addEventListener('submit', async (e) => {
         const { error } = await client.auth.resend({
             type: 'signup',
             email: verEmail,
+            options: {
+                emailRedirectTo: window.location.origin + '/verified.html?from=email' // Must be EXACT
+            }
         });
 
         if (error) throw error;
