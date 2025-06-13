@@ -18,38 +18,38 @@ loginForm.addEventListener('submit', async(e) => {
     const logPassword = document.getElementById('password').value.trim();
     console.log('Login attempt:', { logEmail, logPassword });
 
-    debugger;
+    try {
 
-    const { data: { user: currentUser }, error: authError } = await client.auth.getUser();
-    if (authError) {
-        console.log('Auth Error: ', authError);
-    }
-    if (!currentUser?.email === logEmail) {
-        alert('You have not registered with this email!');
-        return;
-    } else {
-        if (!currentUser?.email_verified) {
-            alert('You have not verified your email, Please check your email or spam.');
-            return;
-        }
-        else {
+        // 2. Check for existing records WITHOUT auth
+        const [{ data: profileUser }, { data: pendingUser }] = await Promise.all([
+            client.from('Profiles').select('email').eq('email', logEmail).maybeSingle(),
+            client.from('PendingUsers').select('email').eq('email', logEmail).maybeSingle()
+        ]);
+
+        // 3. Handle existing records
+        if (profileUser) {
             const { data: loginData, error: loginError } = await client.auth.signInWithPassword({
                 email: logEmail,
                 password: logPassword
             });
-            if (loginError) {
-                alert('Login Failed: Invalid Email or Password.');
-                return;
+            if (loginError) throw loginError;
+
+            console.log('Login attempt:', { logEmail, logPassword });
+            if (loginData.user) {
+                window.location.href = 'dashboard.html';
             }
         }
-    }
-    
-    // In a real application, you would send this data to your server
-    console.log('Login attempt:', { logEmail, logPassword });
+        if (pendingUser) {
+            alert('Email is not verified. Please check your email to verify this account and proceed to login!');
+            return;
+        }
+        if (!profileUser && !pendingUser) {
+            alert('Email is not registered. Please proceed to register before logging in!');
+            return;
+        }     
 
-    // For demo purposes, we'll just redirect to the dashboard
-    // Normally you would check credentials on the server and redirect only if valid
-    if (loginData.user) {
-        window.location.href = 'dashboard.html';
+    } catch (error) {
+        console.error('Login error:', error);
+        alert(`Error: ${error.message}`);
     }
 });
