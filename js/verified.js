@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     // Case 2: Direct access without token
     else {
-        showInfo('Please check your email for verification link');
+        alert('Please check your email for verification link');
     }
 });
 
