@@ -146,7 +146,6 @@ disNameForm.addEventListener('submit', async (e) => {
 
 changePwForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    debugger;
     const currentPassword = document.getElementById('curPw').value;
     const newPassword = document.getElementById('newPw').value;
     const confirmPassword = document.getElementById('conNewPw').value;
