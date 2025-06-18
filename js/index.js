@@ -11,7 +11,6 @@ mobileMenuButton.addEventListener('click', () => {
 // Auth check and UI update
 document.addEventListener('DOMContentLoaded', async () => {
     // Check auth status
-    debugger;
     const { data: { user: logUser }, error } = await client.auth.getUser();
     if (logUser) {
         const { data: profileData, error: profileError } = await client
