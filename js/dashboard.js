@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Check if user is authenticated
     const { data: { user: logUser }, error } = await client.auth.getUser();
-    debugger;
     if (!logUser) {
         window.location.href = 'login.html';
         return;
