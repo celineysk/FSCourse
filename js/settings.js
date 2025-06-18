@@ -106,12 +106,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Hide all content sections
             contentSections.forEach(section => {
-                section.classList.add('hidden');
+                section.classList.add('md:hidden');
             });
 
             // Show the selected content section
             const sectionId = this.getAttribute('data-section') + '-section';
-            document.getElementById(sectionId).classList.remove('hidden');
+            document.getElementById(sectionId).classList.remove('md:hidden');
         });
     });
 });
