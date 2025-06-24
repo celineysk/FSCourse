@@ -8,18 +8,33 @@ mobileMenuButton.addEventListener('click', () => {
     mobileMenu.classList.toggle('hidden');
 });
 
+let logUser;
+let discount, disExpiry, disAvailable;
+
+// Discount coupon functionality
+const revealButton = document.getElementById('reveal-discount');
+const discountRevealed = document.getElementById('discount-revealed');
+const discountExpired = document.getElementById('discount-expired');
+const discountAmount = document.getElementById('discount-amount');
+const couponCode = document.getElementById('coupon-code');
+const countdownElement = document.getElementById('countdown');
+
 // Auth check and UI update
 document.addEventListener('DOMContentLoaded', async () => {
     // Check auth status
-    const { data: { user: logUser }, error } = await client.auth.getUser();
+    const { data: { user }, error } = await client.auth.getUser();
+
+    logUser = user;
     if (logUser) {
         const { data: profileData, error: profileError } = await client
-            .from('Profiles')
-            .select('displayName')
+            .from('profilesDiscount')
+            .select('displayName, discountAvailable')
             .eq('email', logUser.email)
             .single();
-        console.log(profileData.displayName);
 
+        console.log(profileData.displayName);
+        disAvailable = profileData.discountAvailable;
+        console.log(profileData.discountAvailable);
         // Display user info
         if (!profileData.displayName) {
             document.getElementById('user-name').textContent = logUser.email.split('@')[0];
@@ -67,6 +82,61 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         }
 
+        if (disAvailable) { //can redeem discount
+
+            localStorage.removeItem('fengshui_discount');
+            localStorage.removeItem('fengshui_discount_expiry');
+
+            discount = localStorage.getItem('fengshui_discount');
+            console.log('hello', discount);
+            if (discount != null) { //check if there's record of discount in local
+                disExpiry = localStorage.getItem('fengshui_discount_expiry');
+            } else {
+                const { data: disGet, error: disError } = await client
+                    .from('Profiles')
+                    .select('discount, discountExpiry')
+                    .eq('email', logUser.email)
+                    .single()
+
+                discount = disGet.discount;
+                disExpiry = new Date(disGet.discountExpiry).getTime();
+                console.log('discount', discount);
+                localStorage.setItem('fengshui_discount', discount);
+                localStorage.setItem('fengshui_discount_expiry', disExpiry);
+            }
+
+            if (discount != 'null' && discount != null) { //if user claimed discount & not expired
+                // Hide button, show discount
+                revealButton.classList.add('hidden');
+                discountRevealed.classList.remove('hidden');
+                startCountdown();
+
+            }
+
+
+        } else { //discount expired
+            revealButton.classList.add('hidden');
+            discountExpired.classList.remove('hidden');
+            localStorage.removeItem('fengshui_discount');
+            localStorage.removeItem('fengshui_discount_expiry');
+
+        }
+
+        if (discount === 300) {
+            document.getElementById('disPrice').textContent = '99'
+            document.getElementById('disPercent').textContent = '83.5%'
+
+        } else if (discount === 200) {
+            document.getElementById('disPrice').textContent = '199'
+            document.getElementById('disPercent').textContent = '66.8%'
+
+        } else {           
+            document.getElementById('disPrice').textContent = '249'
+            document.getElementById('disPercent').textContent = '58.4%'            
+        }
+
+        document.getElementById('cta').classList.add('hidden');
+
         // Set up logout
         const logoutButtons = [
             document.getElementById('logout-button'),
@@ -81,12 +151,75 @@ document.addEventListener('DOMContentLoaded', async () => {
         logoutButtons.forEach(btn => {
             if (btn) btn.addEventListener('click', logout);
         });
-    } else {
-        document.getElementById('logged-out-buttons').classList.remove('hidden');
-        document.getElementById('logged-in-profile').classList.add('md:hidden');
-        document.getElementById('mobile-logged-out-buttons').classList.remove('hidden');
-        document.getElementById('mobile-dash-set').classList.add('hidden');
-        document.getElementById('mobile-logged-in-profile').classList.add('hidden');
-        document.getElementById('mobile-index-logout-button').classList.add('hidden');
     }
 });
+
+revealButton.addEventListener('click', async () => {
+    if (!logUser) {
+        alert('Please login before using discount!');
+        window.location.href = 'login.html';
+        return;
+    }
+
+    // Generate random discount based on probabilities
+    const random = Math.random();
+    let dis;
+
+    if (random < 0.5) { // 50% chance
+        dis = '300';
+    } else if (random < 0.8) { // 30% chance
+        dis = '200';
+    } else { // 20% chance
+        dis = '150';
+    }
+
+    discountAmount.textContent = dis;
+
+    // Hide button, show discount
+    revealButton.classList.add('hidden');
+    discountRevealed.classList.remove('hidden');
+    localStorage.setItem('fengshui_discount_expiry', Date.now() + 3600000);
+
+    try {
+        const { error: disError } = await client
+            .from('Profiles')
+            .update({
+                discount: dis,
+                discountExpiry: new Date(Date.now() + 3600000).toISOString()
+            })
+            .eq('email', logUser.email)
+
+        if (disError) throw (disError);
+
+        startCountdown();
+    } catch (error) {
+        console.log('Error: ', error);
+    }
+        
+    
+});
+
+function startCountdown() {
+    debugger;
+    console.log(disExpiry);
+    const updateCountdown = () => {
+        const now = Date.now();
+        const timeLeft = Math.max(0, disExpiry - now);
+
+        if (timeLeft <= 0) {
+            countdownElement.textContent = 'Expired';
+           
+            return;
+        }
+
+        const hours = Math.floor(timeLeft / (1000 * 60 * 60)).toString().padStart(2, '0');
+        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000).toString().padStart(2, '0');
+
+        countdownElement.textContent = `${hours}:${minutes}:${seconds}`;
+        setTimeout(updateCountdown, 1000);
+    };
+
+    updateCountdown();
+}
+
