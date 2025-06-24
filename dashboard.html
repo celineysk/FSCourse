@@ -66,6 +66,24 @@
         </div>
     </header>
 
+    <!-- Discount Banner (if available) -->
+    <div id="discount-banner" class="mt-[50px] md:mt-[60px] bg-red-600 text-white p-4 hidden">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center mb-3 md:mb-0">
+                <i class="fas fa-gift text-yellow-300 text-xl mr-3"></i>
+                <p class="font-medium">
+                    You have a special discount:
+                    <span class="font-bold">€</span>
+                    <span id="banner-discount" class="font-bold">300</span>
+                </p>
+            </div>
+            <div class="flex items-center">
+                <p class="mr-3">Expires in: <span id="banner-countdown" class="font-bold">00:59:59</span></p>
+                <button id="apply-discount" class="px-4 py-1 bg-white text-red-600 rounded font-medium hover:bg-gray-100 transition-all">Apply Now</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Dashboard Content -->
     <div class="pt-20 pb-12">
         <div class="container mx-auto px-4">
@@ -90,25 +108,12 @@
 
                     <!-- Course Card Template (hidden, used by JavaScript) -->
                     <div id="course-card-template" class="hidden bg-white rounded-lg shadow-md overflow-hidden hover-scale transition-all">
-                        <img src="https://images.pexels.com/photos/5490266/pexels-photo-5490266.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Course" class="w-full h-48 object-cover">
+                        <img src="css/landing page pic.jpg" alt="Course" class="w-full h-48 object-cover">
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-2">
                                 <span class="px-2 py-1 bg-green-100 text-green-600 text-xs font-medium rounded">Enrolled</span>
-                                <div class="flex items-center">
-                                    <i class="fas fa-certificate text-yellow-400 text-sm mr-1"></i>
-                                    <span class="text-gray-600 text-sm">Certificate Available</span>
-                                </div>
                             </div>
-                            <h3 class="text-xl font-semibold text-gray-800 mb-2">Course Title</h3>
-                            <div class="mb-4">
-                                <div class="w-full bg-gray-200 rounded-full h-2.5">
-                                    <div class="bg-sky-blue h-2.5 rounded-full" style="width: 0%"></div>
-                                </div>
-                                <div class="flex justify-between mt-1">
-                                    <span class="text-xs text-gray-500">Progress: 0%</span>
-                                    <span class="text-xs text-gray-500">0/12 modules completed</span>
-                                </div>
-                            </div>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">A MONEY MAGNET with Scientific Feng Shui in 24 Hours!</h3>
                             <a href="course-player.html" class="block text-center px-4 py-2 bg-sky-blue text-white rounded hover:bg-sky-blue-dark transition-all">Continue Learning</a>
                         </div>
                     </div>
@@ -147,7 +152,7 @@
                 <h2 class="text-xl font-bold text-gray-800 mb-6">Recommended for You</h2>
 
                 <!-- Course Card-->
-                <div class="grid grid-cols-1 mx-[300px] bg-white rounded-lg shadow-md overflow-hidden hover-scale transition-all">
+                <div class="grid grid-cols-1 md:mx-[300px] bg-white rounded-lg shadow-md overflow-hidden hover-scale transition-all">
                     <img src="css/landing page pic.jpg" alt="Feng Shui Fundamentals" class="w-full h-[250px] object-cover">
                     <div class="p-6">
                         <h3 class="text-xl font-semibold text-gray-800 mb-2">A MONEY MAGNET with Scientific Feng Shui in 24 Hours !</h3>
@@ -157,14 +162,15 @@
                             <span class="text-sky-blue-dark font-bold text-xl line-through">€599</span>
 
                             <!-- Discounted Price -->
-                            <span class="text-red-600 font-bold text-5xl -ml-[250px]">€399</span>
+                            <span class="text-red-600 font-bold text-5xl md:-ml-[250px]">€</span>
+                            <span id="disPrice" class="text-red-600 font-bold text-5xl md:-ml-[260px]">399</span>
 
                             <!-- Optional Discount Badge -->
-                            <span class="bg-green-100 text-green-800 text-xs font-medium px-2 py-0.5 rounded -ml-[250px]">-34%</span>
+                            <span id="disPercent" class="bg-green-100 text-green-800 text-xs font-medium px-2 py-0.5 rounded md:-ml-[250px]">-34%</span>
 
                             <span class="text-gray-500 text-sm">34 Lectures</span>
                         </div>
-                        <a href="course-details.html" class="block text-center px-4 py-2 bg-sky-blue text-white rounded hover:bg-sky-blue-dark transition-all">Learn More</a>
+                        <a href="courseDetails.html" class="block text-center px-4 py-2 bg-sky-blue text-white rounded hover:bg-sky-blue-dark transition-all">Learn More</a>
                     </div>
                 </div>
             </div>
