@@ -15,7 +15,7 @@ let discount, disExpiry, disAvailable;
 const revealButton = document.getElementById('reveal-discount');
 const discountRevealed = document.getElementById('discount-revealed');
 const discountExpired = document.getElementById('discount-expired');
-const discountAmount = document.getElementById('discount-amount');
+const discountAmount = document.getElementById('discountAmount');
 const couponCode = document.getElementById('coupon-code');
 const countdownElement = document.getElementById('countdown');
 
@@ -84,8 +84,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (disAvailable) { //can redeem discount
 
-            localStorage.removeItem('fengshui_discount');
-            localStorage.removeItem('fengshui_discount_expiry');
+         
 
             discount = localStorage.getItem('fengshui_discount');
             console.log('hello', discount);
@@ -101,6 +100,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 discount = disGet.discount;
                 disExpiry = new Date(disGet.discountExpiry).getTime();
                 console.log('discount', discount);
+                discountAmount.textContent = discount
                 localStorage.setItem('fengshui_discount', discount);
                 localStorage.setItem('fengshui_discount_expiry', disExpiry);
             }
@@ -122,15 +122,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         }
 
-        if (discount === "300") {
+        if (discount === "300" || discount === 300) {
             document.getElementById('disPrice').textContent = '99'
             document.getElementById('disPercent').textContent = '83.5%'
 
-        } else if (discount === "200") {
+        } else if (discount === "200" || discount === 200) {
             document.getElementById('disPrice').textContent = '199'
             document.getElementById('disPercent').textContent = '66.8%'
 
-        } else if (discount === "150") {           
+        } else if (discount === "150" || discount === 150) {           
             document.getElementById('disPrice').textContent = '249'
             document.getElementById('disPercent').textContent = '58.4%'            
         }
@@ -178,6 +178,7 @@ revealButton.addEventListener('click', async () => {
     // Hide button, show discount
     revealButton.classList.add('hidden');
     discountRevealed.classList.remove('hidden');
+    localStorage.setItem('fengshui_discount', dis);
     localStorage.setItem('fengshui_discount_expiry', Date.now() + 3600000);
 
     try {
@@ -200,7 +201,6 @@ revealButton.addEventListener('click', async () => {
 });
 
 function startCountdown() {
-    debugger;
     console.log(disExpiry);
     const updateCountdown = () => {
         const now = Date.now();
