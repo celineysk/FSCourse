@@ -8,6 +8,14 @@ mobileMenuButton.addEventListener('click', () => {
     mobileMenu.classList.toggle('hidden');
 });
 
+// Check for discount in localStorage and display banner if present
+const discountBanner = document.getElementById('discount-banner');
+const bannerDiscount = document.getElementById('banner-discount');
+const bannerCountdown = document.getElementById('banner-countdown');
+
+const hasDiscount = localStorage.getItem('fengshui_discount');
+const discountExpiry = localStorage.getItem('fengshui_discount_expiry');
+
 // Check if user is logged in & Display user data anywhere
 // Auth check and user data loading
 document.addEventListener('DOMContentLoaded', async () => {
@@ -64,6 +72,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    const discount = hasDiscount;
+    console.log(hasDiscount, '', discount)
+    if (discount === "300") {
+        document.getElementById('disPrice').textContent = '99'
+        document.getElementById('disPercent').textContent = '83.5%'
+
+    } else if (discount === "200") {
+        document.getElementById('disPrice').textContent = '199'
+        document.getElementById('disPercent').textContent = '66.8%'
+
+    } else if (discount === "150") {
+        document.getElementById('disPrice').textContent = '249'
+        document.getElementById('disPercent').textContent = '58.4%'
+    }
+
     // Load user-specific data from Supabase instead of localStorage
     //await loadPurchasedCourses(user.id);
 
@@ -118,3 +141,47 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
+if (hasDiscount && discountExpiry) {
+    // Show banner with discount info
+    discountBanner.classList.remove('hidden');
+
+    // Extract discount amount from code
+    if (hasDiscount === '300') {
+        bannerDiscount.textContent = '300';
+    } else if (hasDiscount === '200') {
+        bannerDiscount.textContent = '200';
+    } else if (hasDiscount === '150') {
+        bannerDiscount.textContent = '150';
+    }
+
+    // Start countdown
+    const updateBannerCountdown = () => {
+        const now = Date.now();
+        const timeLeft = Math.max(0, discountExpiry - now);
+
+        if (timeLeft <= 0) {
+            bannerCountdown.textContent = 'Expired';
+            localStorage.removeItem('fengshui_discount');
+            localStorage.removeItem('fengshui_discount_expiry');
+            discountBanner.classList.add('hidden');
+            return;
+        }
+
+        const hours = Math.floor(timeLeft / (1000 * 60 * 60)).toString().padStart(2, '0');
+        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000).toString().padStart(2, '0');
+
+        bannerCountdown.textContent = `${hours}:${minutes}:${seconds}`;
+        setTimeout(updateBannerCountdown, 1000);
+    };
+
+    updateBannerCountdown();
+}
+
+// Apply discount button
+const applyDiscountBtn = document.getElementById('apply-discount');
+
+applyDiscountBtn.addEventListener('click', () => {
+    // In a real application, this would apply the discount to the course prices
+    alert('Discount applied! The discount will be applied at checkout.');
+});
