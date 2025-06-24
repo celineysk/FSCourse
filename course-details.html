@@ -21,9 +21,9 @@
 
             <!-- Desktop Navigation -->
             <nav class="hidden md:flex space-x-6">
-                <a href="#index" class="text-gray-800 hover:text-sky-blue-dark font-medium">Home</a>
+                <a href="index.html" class="text-gray-800 hover:text-sky-blue-dark font-medium">Home</a>
                 <a href="#courses" class="text-gray-800 hover:text-sky-blue-dark font-medium">Courses</a>
-                <a href="#about" class="text-gray-800 hover:text-sky-blue-dark font-medium">About</a>
+                <a href="index.html#about" class="text-gray-800 hover:text-sky-blue-dark font-medium">About</a>
                 <a href="#contact" class="text-gray-800 hover:text-sky-blue-dark font-medium">Contact</a>
             </nav>
 
@@ -56,7 +56,7 @@
         </div>
 
         <!-- Mobile Navigation -->
-        <div id="mobile-menu" class="md:hidden bg-white shadow-lg absolute w-full">
+        <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg absolute w-full">
             <div class="px-4 py-4 space-y-3">
                 <div class="hidden space-y-3" id="mobile-dash-set">
                     <a href="dashboard.html" class="block text-gray-800 hover:text-sky-blue-dark font-medium">Dashboard</a>
@@ -64,7 +64,7 @@
                 </div>
                 <a href="#index" class="block text-gray-800 hover:text-sky-blue-dark font-medium">Home</a>
                 <a href="#courses" class="block text-gray-800 hover:text-sky-blue-dark font-medium">Courses</a>
-                <a href="#about" class="block text-gray-800 hover:text-sky-blue-dark font-medium">About</a>
+                <a href="index.html#about" class="block text-gray-800 hover:text-sky-blue-dark font-medium">About</a>
                 <a href="#contact" class="block text-gray-800 hover:text-sky-blue-dark font-medium">Contact</a>
                 <div id="mobile-logged-out-buttons" class="pt-2 flex space-x-2">
                     <a href="login.html" class="w-1/2 text-center px-4 py-2 text-sky-blue-dark border border-sky-blue-dark rounded hover:bg-sky-blue hover:text-white transition-all">Login</a>
@@ -87,14 +87,15 @@
     </header>
 
     <!-- Discount Banner (if available) -->
-    <div id="discount-banner" class="bg-red-600 text-white p-4 hidden mt-16">
+    <div id="discount-banner" class="mt-[50px] md:mt-[60px] bg-red-600 text-white p-4 hidden">
         <div class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
             <div class="flex items-center mb-3 md:mb-0">
                 <i class="fas fa-gift text-yellow-300 text-xl mr-3"></i>
-                <div>
-                    <p class="font-medium">You have a special discount: <span id="banner-discount" class="font-bold">€300</span></p>
-                    <p class="text-sm">Use code: <span id="banner-code" class="font-bold">FENGSHUI300</span></p>
-                </div>
+                <p class="font-medium">
+                    You have a special discount:
+                    <span class="font-bold">€</span>
+                    <span id="banner-discount" class="font-bold">300</span>
+                </p>
             </div>
             <div class="flex items-center">
                 <p class="mr-3">Expires in: <span id="banner-countdown" class="font-bold">00:59:59</span></p>
@@ -110,9 +111,9 @@
                 <!-- Course Info -->
                 <div class="md:w-2/3 md:pr-8">
                     <span class="px-2 py-1 bg-sky-blue-light text-sky-blue-dark text-xs font-medium rounded mb-3 inline-block">Beginner</span>
-                    <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Feng Shui Fundamentals</h1>
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">A MONEY MAGNET with Scientific Feng Shui in 24 Hours!</h1>
 
-                    <p class="text-lg text-gray-600 mb-6">Master the basics of Feng Shui and learn how to create balanced energy in any space. This comprehensive course will give you a solid foundation in Feng Shui principles and practical techniques.</p>
+                    <p class="text-lg text-gray-600 mb-6">No knowledge of feng shui is required; ALL you need is the will to change your destiny! Learn HOW to BOOST Company and HOME Prosperity, with Scientific Feng Shui and How to Arrange Wealth-Attracting Ornaments</p>
 
                     <div class="flex flex-wrap gap-4 mb-6">
                         <div class="flex items-center">
@@ -126,7 +127,7 @@
                         </div>
                         <div class="flex items-center">
                             <i class="fas fa-clock text-gray-500 mr-1"></i>
-                            <span class="text-gray-700">20 hours</span>
+                            <span class="text-gray-700">0.5 hours</span>
                         </div>
                         <div class="flex items-center">
                             <i class="fas fa-calendar-alt text-gray-500 mr-1"></i>
@@ -137,7 +138,7 @@
                     <div class="mb-6">
                         <p class="text-gray-700 mb-2">Created by:</p>
                         <div class="flex items-center">
-                            <img src="https://images.pexels.com/photos/3768911/pexels-photo-3768911.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Miss Yeoh" class="w-12 h-12 rounded-full object-cover mr-3">
+                            <img src="css/about miss yeoh pic.jpg" alt="Miss Yeoh" class="w-12 h-12 rounded-full object-cover mr-3">
                             <div>
                                 <h3 class="font-semibold text-gray-800">Miss Yeoh</h3>
                                 <p class="text-gray-600 text-sm">Feng Shui Master & Consultant</p>
@@ -155,12 +156,17 @@
                         <div class="p-6">
                             <div class="flex items-center justify-between mb-4">
                                 <div>
-                                    <span class="text-3xl font-bold text-gray-800">€999</span>
-                                    <span id="original-price" class="text-lg text-gray-500 line-through ml-2">€1,299</span>
+                                    <span class="text-3xl font-bold text-red-500">€</span>
+                                    <span id="discountPrice" class="text-3xl font-bold text-red-500">399</span>
+                                    <span id="original-price" class="text-lg text-gray-500 line-through ml-2">€599</span>
                                 </div>
-                                <span class="bg-red-100 text-red-600 px-2 py-1 rounded text-sm font-medium">23% off</span>
+                                <span id="discountPercent" class="bg-red-100 text-red-600 px-2 py-1 rounded text-sm font-medium">-34%</span>
                             </div>
-                            <p id="discount-applied" class="text-green-600 font-medium mb-4 hidden">Discount applied: <span id="discount-amount">€300</span></p>
+                            <p id="discount-applied" class="text-green-600 font-medium mb-4 hidden">
+                                Discount applied:
+                                <span>€</span>
+                                <span id="discount-amount">300</span>
+                            </p>
                             <div class="mb-4">
                                 <button id="enroll-button" class="w-full bg-sky-blue text-white py-3 rounded-md font-medium hover:bg-sky-blue-dark transition-all">Enroll Now</button>
                             </div>
@@ -170,11 +176,7 @@
                                 <ul class="space-y-2">
                                     <li class="flex items-start">
                                         <i class="fas fa-video text-sky-blue mt-1 mr-3"></i>
-                                        <span class="text-gray-600">20 hours of on-demand video</span>
-                                    </li>
-                                    <li class="flex items-start">
-                                        <i class="fas fa-file-alt text-sky-blue mt-1 mr-3"></i>
-                                        <span class="text-gray-600">15 downloadable resources</span>
+                                        <span class="text-gray-600">0.5 hours of on-demand video</span>
                                     </li>
                                     <li class="flex items-start">
                                         <i class="fas fa-infinity text-sky-blue mt-1 mr-3"></i>
@@ -182,15 +184,11 @@
                                     </li>
                                     <li class="flex items-start">
                                         <i class="fas fa-mobile-alt text-sky-blue mt-1 mr-3"></i>
-                                        <span class="text-gray-600">Access on mobile and TV</span>
-                                    </li>
-                                    <li class="flex items-start">
-                                        <i class="fas fa-certificate text-sky-blue mt-1 mr-3"></i>
-                                        <span class="text-gray-600">Certificate of completion</span>
+                                        <span class="text-gray-600">Access on any devices</span>
                                     </li>
                                 </ul>
                             </div>
-                            <div class="flex justify-between">
+                            <!--<div class="flex justify-between">
                                 <button class="text-sky-blue-dark hover:underline flex items-center">
                                     <i class="fas fa-share-alt mr-2"></i>
                                     Share
@@ -203,7 +201,7 @@
                                     <i class="fas fa-gift mr-2"></i>
                                     Gift
                                 </button>
-                            </div>
+                            </div>-->
                         </div>
                     </div>
                 </div>
@@ -217,59 +215,73 @@
             <div class="flex overflow-x-auto pb-2 mb-4">
                 <button class="content-tab px-6 py-2 font-medium text-gray-800 border-b-2 border-sky-blue whitespace-nowrap">Overview</button>
                 <button class="content-tab px-6 py-2 font-medium text-gray-500 border-b-2 border-transparent whitespace-nowrap">Curriculum</button>
-                <button class="content-tab px-6 py-2 font-medium text-gray-500 border-b-2 border-transparent whitespace-nowrap">Instructor</button>
                 <button class="content-tab px-6 py-2 font-medium text-gray-500 border-b-2 border-transparent whitespace-nowrap">Reviews</button>
                 <button class="content-tab px-6 py-2 font-medium text-gray-500 border-b-2 border-transparent whitespace-nowrap">FAQ</button>
             </div>
 
             <!-- Overview Tab Content -->
             <div class="tab-content">
-                <div class="max-w-3xl">
+                <div id="tabOverview" class="max-w-3xl">
                     <h2 class="text-2xl font-bold text-gray-800 mb-4">What You'll Learn</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
                         <div class="flex items-start">
                             <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
-                            <span class="text-gray-700">Understand the fundamental principles of Feng Shui</span>
+                            <span class="text-gray-700">What is Feng Shui.</span>
                         </div>
                         <div class="flex items-start">
                             <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
-                            <span class="text-gray-700">Learn how to read and use a Bagua map</span>
+                            <span class="text-gray-700">Key TIPS for Feng Shui Success</span>
                         </div>
                         <div class="flex items-start">
                             <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
-                            <span class="text-gray-700">Identify and correct energy imbalances in any space</span>
+                            <span class="text-gray-700">WHY Fortune 500 Companies Use Feng Shui</span>
                         </div>
                         <div class="flex items-start">
                             <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
-                            <span class="text-gray-700">Apply the five elements theory to enhance harmony</span>
+                            <span class="text-gray-700">HOW to arrange wealth-attracting ornaments!</span>
                         </div>
                         <div class="flex items-start">
                             <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
-                            <span class="text-gray-700">Create optimal furniture placement for energy flow</span>
+                            <span class="text-gray-700">Master your space without the Feng Shui Master!</span>
                         </div>
                         <div class="flex items-start">
                             <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
-                            <span class="text-gray-700">Use color psychology to influence mood and energy</span>
+                            <span class="text-gray-700">Understanding Your Personal Bazi Five Elements.</span>
                         </div>
                         <div class="flex items-start">
                             <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
-                            <span class="text-gray-700">Implement simple cures for common Feng Shui problems</span>
+                            <span class="text-gray-700">How to adjust Your Bazi Five Elements Energy through Feng Shui.</span>
+                        </div>
+
+
+                        <div class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span class="text-gray-700">HOW to Harness Feng Shui To Enhance YOUR FORTUNE.</span>
                         </div>
                         <div class="flex items-start">
                             <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
-                            <span class="text-gray-700">Perform a basic Feng Shui assessment of any space</span>
+                            <span class="text-gray-700">How To Use Nine Purple White Flying Stars.</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span class="text-gray-700">How to boost Your Wealth, Career advancement, Attracting Benefactors, Academic success, and Romantic Relationships.</span>
                         </div>
                     </div>
 
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Course Description</h2>
-                    <div class="space-y-4 mb-8">
-                        <p class="text-gray-700">Feng Shui Fundamentals is a comprehensive introduction to the ancient Chinese art of harmonizing individuals with their surrounding environment. This course is designed for beginners with no prior knowledge of Feng Shui and provides a solid foundation in both theory and practical application.</p>
-
-                        <p class="text-gray-700">Throughout this course, you'll learn how to apply Feng Shui principles to create balance, harmony, and positive energy in any space. You'll discover how the arrangement of objects, colors, and materials can influence various aspects of your life, including health, relationships, career, and prosperity.</p>
-
-                        <p class="text-gray-700">Miss Yeoh brings over 20 years of experience as a Feng Shui master and consultant, sharing practical insights that go beyond theory. Each lesson includes real-world examples, case studies, and practical exercises to help you apply what you've learned immediately.</p>
-
-                        <p class="text-gray-700">By the end of this course, you'll have the knowledge and confidence to assess and improve the Feng Shui of your home or office, creating spaces that support your goals and well-being.</p>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Requirements</h2>
+                    <div class="space-y-2 mb-8">
+                        <div class="flex items-start">
+                            <i class="fas fa-circle text-sky-blue text-xs mt-1.5 mr-3"></i>
+                            <span class="text-gray-700">No prior knowledge of Feng Shui is required</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-circle text-sky-blue text-xs mt-1.5 mr-3"></i>
+                            <span class="text-gray-700">Basic understanding of home layout and design is helpful but not necessary</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-circle text-sky-blue text-xs mt-1.5 mr-3"></i>
+                            <span class="text-gray-700">Open mind and willingness to apply new concepts</span>
+                        </div>
                     </div>
 
                     <h2 class="text-2xl font-bold text-gray-800 mb-4">Who This Course is For</h2>
@@ -296,6 +308,66 @@
                         </div>
                     </div>
 
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Course Description</h2>
+                    <div class="space-y-4 mb-8">
+                        <p class="text-gray-700">Through this course, you will Learn What Feng Shui truly is and HOW to Harness Feng Shui to enhance your fortune, including Wealth accumulation ,Career advancement , Attracting benefactors , Academic success , Romantic relationships and other key areas of Life. </p>
+
+                        <p class="text-gray-700">This practical system makes professional Feng Shui techniques accessible to everyone, allowing you to create positive energy in your living and working spaces. Whether you are a complete beginner or looking to deepen your knowledge, these modules will guide you step-by-step in applying these ancient principles to modern life.</p>
+
+                        <p class="font-bold text-gray-700">With 10 years of experience in corporate feng shui consulting and residential space harmonization, she blends practical insights with ancient wisdom as a successful entrepreneur. Specializing in feng shui energy, crystal healing, manifestation principles, and holistic business-wellness integration, she excels at distilling complex systems into actionable life strategies. A firm believer in the democratization of knowledge—when expertise is no longer gatekept, everyone can access the tools to transform their lives. </p>
+
+                        <p class="font-bold text-gray-700">Now, she is dedicated to building a structured knowledge system, offering clear and accessible teachings to help learners quickly grasp the essence and apply these timeless principles for tangible results in daily life.</p>
+                    </div>
+
+                </div>
+
+                <div id="tabCurriculum" class="max-w-3xl">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">What You'll Learn</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                        <div class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span class="text-gray-700">What is Feng Shui.</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span class="text-gray-700">Key TIPS for Feng Shui Success</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span class="text-gray-700">WHY Fortune 500 Companies Use Feng Shui</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span class="text-gray-700">HOW to arrange wealth-attracting ornaments!</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span class="text-gray-700">Master your space without the Feng Shui Master!</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span class="text-gray-700">Understanding Your Personal Bazi Five Elements.</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span class="text-gray-700">How to adjust Your Bazi Five Elements Energy through Feng Shui.</span>
+                        </div>
+
+
+                        <div class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span class="text-gray-700">HOW to Harness Feng Shui To Enhance YOUR FORTUNE.</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span class="text-gray-700">How To Use Nine Purple White Flying Stars.</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span class="text-gray-700">How to boost Your Wealth, Career advancement, Attracting Benefactors, Academic success, and Romantic Relationships.</span>
+                        </div>
+                    </div>
+
                     <h2 class="text-2xl font-bold text-gray-800 mb-4">Requirements</h2>
                     <div class="space-y-2 mb-8">
                         <div class="flex items-start">
@@ -311,7 +383,44 @@
                             <span class="text-gray-700">Open mind and willingness to apply new concepts</span>
                         </div>
                     </div>
+
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Who This Course is For</h2>
+                    <div class="space-y-2 mb-8">
+                        <div class="flex items-start">
+                            <i class="fas fa-user-check text-sky-blue mr-3"></i>
+                            <span class="text-gray-700">Beginners with no prior knowledge of Feng Shui</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-user-check text-sky-blue mr-3"></i>
+                            <span class="text-gray-700">Homeowners looking to improve their living spaces</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-user-check text-sky-blue mr-3"></i>
+                            <span class="text-gray-700">Interior designers seeking to incorporate Feng Shui principles</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-user-check text-sky-blue mr-3"></i>
+                            <span class="text-gray-700">Real estate professionals wanting to enhance property appeal</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-user-check text-sky-blue mr-3"></i>
+                            <span class="text-gray-700">Anyone interested in creating more harmonious living and working spaces</span>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Course Description</h2>
+                    <div class="space-y-4 mb-8">
+                        <p class="text-gray-700">Through this course, you will Learn What Feng Shui truly is and HOW to Harness Feng Shui to enhance your fortune, including Wealth accumulation ,Career advancement , Attracting benefactors , Academic success , Romantic relationships and other key areas of Life. </p>
+
+                        <p class="text-gray-700">This practical system makes professional Feng Shui techniques accessible to everyone, allowing you to create positive energy in your living and working spaces. Whether you are a complete beginner or looking to deepen your knowledge, these modules will guide you step-by-step in applying these ancient principles to modern life.</p>
+
+                        <p class="font-bold text-gray-700">With 10 years of experience in corporate feng shui consulting and residential space harmonization, she blends practical insights with ancient wisdom as a successful entrepreneur. Specializing in feng shui energy, crystal healing, manifestation principles, and holistic business-wellness integration, she excels at distilling complex systems into actionable life strategies. A firm believer in the democratization of knowledge—when expertise is no longer gatekept, everyone can access the tools to transform their lives. </p>
+
+                        <p class="font-bold text-gray-700">Now, she is dedicated to building a structured knowledge system, offering clear and accessible teachings to help learners quickly grasp the essence and apply these timeless principles for tangible results in daily life.</p>
+                    </div>
+
                 </div>
+
             </div>
         </div>
     </section>
