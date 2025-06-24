@@ -21,8 +21,13 @@ const countdownElement = document.getElementById('countdown');
 
 // Auth check and UI update
 document.addEventListener('DOMContentLoaded', async () => {
+
     // Check auth status
     const { data: { user }, error } = await client.auth.getUser();
+
+    //debuging
+    //localStorage.removeItem('fengshui_discount');
+    //localStorage.removeItem('fengshui_discount_expiry');
 
     logUser = user;
     if (logUser) {
@@ -124,15 +129,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (discount === "300" || discount === 300) {
             document.getElementById('disPrice').textContent = '99'
-            document.getElementById('disPercent').textContent = '83.5%'
+            document.getElementById('disPercent').textContent = '-83.5%'
 
         } else if (discount === "200" || discount === 200) {
             document.getElementById('disPrice').textContent = '199'
-            document.getElementById('disPercent').textContent = '66.8%'
+            document.getElementById('disPercent').textContent = '-66.8%'
 
         } else if (discount === "150" || discount === 150) {           
             document.getElementById('disPrice').textContent = '249'
-            document.getElementById('disPercent').textContent = '58.4%'            
+            document.getElementById('disPercent').textContent = '-58.4%'            
         }
 
         document.getElementById('cta').classList.add('hidden');
@@ -174,6 +179,7 @@ revealButton.addEventListener('click', async () => {
     }
 
     discountAmount.textContent = dis;
+    disExpiry = Date.now() + 3600000;
 
     // Hide button, show discount
     revealButton.classList.add('hidden');
@@ -186,7 +192,7 @@ revealButton.addEventListener('click', async () => {
             .from('Profiles')
             .update({
                 discount: dis,
-                discountExpiry: new Date(Date.now() + 3600000).toISOString()
+                discountExpiry: new Date(disExpiry).toISOString()
             })
             .eq('email', logUser.email)
 
@@ -205,7 +211,8 @@ function startCountdown() {
     const updateCountdown = () => {
         const now = Date.now();
         const timeLeft = Math.max(0, disExpiry - now);
-
+        
+        console.log(timeLeft);
         if (timeLeft <= 0) {
             countdownElement.textContent = 'Expired';
            
