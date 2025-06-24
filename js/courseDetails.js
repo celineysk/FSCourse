@@ -109,11 +109,13 @@ contentTabs.forEach(tab => {
 // Check for discount in localStorage and display on page
 const discountBanner = document.getElementById('discount-banner');
 const bannerDiscount = document.getElementById('banner-discount');
-const bannerCode = document.getElementById('banner-code');
 const bannerCountdown = document.getElementById('banner-countdown');
+
 const discountApplied = document.getElementById('discount-applied');
 const discountAmount = document.getElementById('discount-amount');
-const originalPrice = document.getElementById('original-price');
+const discountPrice = document.getElementById('discountPrice');
+const discountPercent = document.getElementById('discountPercent');
+
 const modalDiscount = document.getElementById('modal-discount');
 const modalDiscountAmount = document.getElementById('modal-discount-amount');
 const modalTotal = document.getElementById('modal-total');
@@ -129,31 +131,36 @@ if (hasDiscount && discountExpiry) {
     discountBanner.classList.remove('hidden');
 
     // Extract discount amount from code
-    if (hasDiscount === 'FENGSHUI300') {
-        bannerDiscount.textContent = '€300';
-        discountAmount.textContent = '€300';
-        modalDiscountAmount.textContent = '-€300';
+    if (hasDiscount === '300') {
+        bannerDiscount.textContent = '300';
+        discountAmount.textContent = '300';
+        discountPrice.textContent = '99';
+        discountPercent.textContent = '-83.5%';
+        modalDiscountAmount.textContent = '-300';
         discountValue = 300;
-    } else if (hasDiscount === 'FENGSHUI200') {
-        bannerDiscount.textContent = '€200';
-        discountAmount.textContent = '€200';
-        modalDiscountAmount.textContent = '-€200';
+    } else if (hasDiscount === '200') {
+        bannerDiscount.textContent = '200';
+        discountAmount.textContent = '200';
+        discountPrice.textContent = '199';
+        discountPercent.textContent = '-66.8%';
+        modalDiscountAmount.textContent = '-200';
         discountValue = 200;
-    } else if (hasDiscount === 'FENGSHUI150') {
-        bannerDiscount.textContent = '€150';
-        discountAmount.textContent = '€150';
-        modalDiscountAmount.textContent = '-€150';
+    } else if (hasDiscount === '150') {
+        bannerDiscount.textContent = '150';
+        discountAmount.textContent = '150';
+        discountPrice.textContent = '249';
+        discountPercent.textContent = '-58.4%';
+        modalDiscountAmount.textContent = '-150';
         discountValue = 150;
     }
 
-    bannerCode.textContent = hasDiscount;
 
     // Show applied discount on page
     discountApplied.classList.remove('hidden');
 
     // Update modal discount and total
     modalDiscount.classList.remove('hidden');
-    modalTotal.textContent = `€${coursePrice - discountValue}`;
+    modalTotal.textContent = `â‚¬${coursePrice - discountValue}`;
 
     // Start countdown
     const updateBannerCountdown = () => {
@@ -167,7 +174,7 @@ if (hasDiscount && discountExpiry) {
             discountBanner.classList.add('hidden');
             discountApplied.classList.add('hidden');
             modalDiscount.classList.add('hidden');
-            modalTotal.textContent = `€${coursePrice}`;
+            modalTotal.textContent = `â‚¬${coursePrice}`;
             return;
         }
 
