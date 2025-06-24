@@ -8,74 +8,181 @@ mobileMenuButton.addEventListener('click', () => {
     mobileMenu.classList.toggle('hidden');
 });
 
-// Registration form submission
-const registerForm = document.getElementById('register-form');
+let logUser = null;
 
-
-registerForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const regEmail = document.getElementById('email').value.trim().toLowerCase();
-    const regPassword = document.getElementById('password').value.trim();
-    const confirmPassword = document.getElementById('confirm-password').value.trim();
-
-    // 1. Basic validation
-    if (regPassword !== confirmPassword) {
-        alert('Passwords do not match');
+// Check if user is logged in & Display user data anywhere
+// Auth check and user data loading
+document.addEventListener('DOMContentLoaded', async () => {
+    console.log('DOM loaded - starting auth check');
+    // Check if user is authenticated
+    const { data: { user }, error } = await client.auth.getUser();
+    logUser = user;
+    if (!logUser) {
+        window.location.href = 'login.html';
         return;
     }
-    if (regPassword.length < 8) {
-        alert('Password must be at least 8 characters');
+
+    const { data: profileData , error: profileError } = await client
+        .from('Profiles')
+        .select('displayName')
+        .eq('email', logUser.email)
+        .single();
+    console.log(profileData.displayName);
+
+    // Display user info
+    if (!profileData.displayName) {
+        document.getElementById('user-name').textContent = logUser.email.split('@')[0];
+        document.getElementById('mobile-user-name').textContent = logUser.email.split('@')[0];
+    } else {
+        document.getElementById('user-name').textContent = profileData.displayName;
+        document.getElementById('mobile-user-name').textContent = profileData.displayName;
+    }   
+
+    // Profile dropdown functionality
+    const profileTrigger = document.getElementById('profile-dropdown-trigger');
+    const profileDropdown = document.getElementById('profile-dropdown');
+
+    if (profileTrigger && profileDropdown) {
+        // Toggle dropdown on profile click
+        profileTrigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            profileDropdown.classList.toggle('hidden');
+            profileDropdown.classList.toggle('show');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!profileDropdown.contains(e.target)) {
+                profileDropdown.classList.add('hidden');
+                profileDropdown.classList.remove('show');
+            }
+        });
+
+        // Close dropdown when clicking on menu items
+        profileDropdown.querySelectorAll('a, button').forEach(item => {
+            item.addEventListener('click', () => {
+                profileDropdown.classList.add('hidden');
+                profileDropdown.classList.remove('show');
+            });
+        });
+    }
+    // Set up logout
+    const logoutButtons = [
+        document.getElementById('logout-button'),
+        document.getElementById('mobile-logout-button')
+    ];
+
+    const logout = () => {
+        client.auth.signOut()
+            .then(() => window.location.href = 'login.html');
+    };
+
+    logoutButtons.forEach(btn => {
+        if (btn) btn.addEventListener('click', logout);
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Get all navigation buttons and content sections
+    const navButtons = document.querySelectorAll('.settings-nav-btn');
+    const contentSections = document.querySelectorAll('.settings-content');
+
+    // Set first button as active by default
+    navButtons[0].classList.add('bg-sky-100', 'text-sky-700');
+    navButtons[0].classList.remove('hover:bg-gray-100', 'text-gray-700');
+
+    // Add click event listeners to navigation buttons
+    navButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            // Remove active styles from all buttons
+            navButtons.forEach(btn => {
+                btn.classList.remove('bg-sky-100', 'text-sky-700');
+                btn.classList.add('hover:bg-gray-100', 'text-gray-700');
+            });
+
+            // Add active styles to clicked button
+            this.classList.add('bg-sky-100', 'text-sky-700');
+            this.classList.remove('hover:bg-gray-100', 'text-gray-700');
+
+            // Hide all content sections
+            contentSections.forEach(section => {
+                section.classList.add('md:hidden');
+            });
+
+            // Show the selected content section
+            const sectionId = this.getAttribute('data-section') + '-section';
+            document.getElementById(sectionId).classList.remove('md:hidden');
+        });
+    });
+});
+
+//Display Name Settings
+const disNameForm = document.getElementById('disNameForm');
+const changePwForm = document.getElementById('changePwForm');
+
+disNameForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const disName = document.getElementById('disName').value.trim();
+
+    try {
+        if (!logUser?.email) {
+            console.log('error');
+        }
+        const { error: insertError } = await client
+            .from('Profiles')
+            .update({ displayName: disName })
+            .eq('email', logUser.email);
+
+        if (insertError) throw insertError;
+
+        alert('Display Name changed successfully!');
+        window.location.href = 'settings.html';
+    } catch (error) {
+        console.log('Error encountered: ', error);
+        alert('Error encountered: ', error);
+
+    }
+});
+
+changePwForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const currentPassword = document.getElementById('curPw').value;
+    const newPassword = document.getElementById('newPw').value;
+    const confirmPassword = document.getElementById('conNewPw').value;
+
+    // Validation
+    if (newPassword !== confirmPassword) {
+       alert("Passwords don't match");
+        return;
+    }
+
+    if (newPassword.length < 8) {
+        alert("Password must be at least 8 characters");
         return;
     }
 
     try {
-
-        // 2. Check for existing records WITHOUT auth
-        const [{ data: profileUser }, { data: pendingUser }] = await Promise.all([
-            client.from('Profiles').select('email').eq('email', regEmail).maybeSingle(),
-            client.from('PendingUsers').select('email').eq('email', regEmail).maybeSingle()
-        ]);
-
-        // 3. Handle existing records
-        if (profileUser) {
-            alert('Email is already verified. Please login!');
-            window.location.href = 'login.html';
-            return;
-        }
-        if (pendingUser) {
-            alert('Email is registered. Please check your email to verify this account and proceed to login!');
-            return;
-        }
-        // 4. Register new user
-        const { data: signUpData, error: signUpError } = await client.auth.signUp({
-            email: regEmail,
-            password: regPassword,
-            options: {
-                emailRedirectTo: window.location.origin + '/verified.html' // Must be EXACT
-            }
+        // Step 1: Reauthenticate user
+        const { error: authError } = await client.auth.signInWithPassword({
+            email: logUser.email,
+            password: currentPassword
         });
 
-        if (signUpError) throw signUpError;
+        if (authError) throw authError;
 
-        // 5. Insert to PendingUsers (use response data directly)
-        const { error: insertError } = await client
-            .from('PendingUsers')
-            .insert([{
-                email: regEmail,
-                id: signUpData.user?.id,
-                created_at: new Date().toISOString()
-            }]);
+        // Step 2: Update password
+        const { error: updateError } = await client.auth.updateUser({
+            password: newPassword
+        });
 
-        if (insertError) throw insertError;
+        if (updateError) throw updateError;
 
-        alert('Registration successful! Check your email to verify.');
-        window.location.href = 'login.html';
+        // Success
+        alert('Password updated successfully!');
+        e.target.reset();
 
     } catch (error) {
-        console.error('Registration error:', error);
-        alert(`Error: ${error.message}`);
+        alert('Error updating Password: ', error);
+        console.error("Password change error:", error);
     }
 });
-
-
