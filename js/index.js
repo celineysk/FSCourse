@@ -122,15 +122,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         }
 
-        if (discount === 300) {
+        if (discount === "300") {
             document.getElementById('disPrice').textContent = '99'
             document.getElementById('disPercent').textContent = '83.5%'
 
-        } else if (discount === 200) {
+        } else if (discount === "200") {
             document.getElementById('disPrice').textContent = '199'
             document.getElementById('disPercent').textContent = '66.8%'
 
-        } else {           
+        } else if (discount === "150") {           
             document.getElementById('disPrice').textContent = '249'
             document.getElementById('disPercent').textContent = '58.4%'            
         }
