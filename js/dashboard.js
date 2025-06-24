@@ -8,6 +8,8 @@ mobileMenuButton.addEventListener('click', () => {
     mobileMenu.classList.toggle('hidden');
 });
 
+let logUser;
+
 // Check for discount in localStorage and display banner if present
 const discountBanner = document.getElementById('discount-banner');
 const bannerDiscount = document.getElementById('banner-discount');
@@ -16,130 +18,134 @@ const bannerCountdown = document.getElementById('banner-countdown');
 const hasDiscount = localStorage.getItem('fengshui_discount');
 const discountExpiry = localStorage.getItem('fengshui_discount_expiry');
 
-// Check if user is logged in & Display user data anywhere
-// Auth check and user data loading
+// Auth check and UI update
 document.addEventListener('DOMContentLoaded', async () => {
+    // Check auth status
+    const { data: { user }, error } = await client.auth.getUser();
 
-    // Check if user is authenticated
-    const { data: { user: logUser }, error } = await client.auth.getUser();
-    if (!logUser) {
-        window.location.href = 'login.html';
-        return;
-    }
+    logUser = user;
+    if (logUser) {
+        const { data: profileData, error: profileError } = await client
+            .from('profilesDiscount')
+            .select('displayName, discountAvailable')
+            .eq('email', logUser.email)
+            .single();
 
-    const { data: profileData, error: profileError } = await client
-        .from('Profiles')
-        .select('displayName')
-        .eq('email', logUser.email)
-        .single();
-    console.log(profileData.displayName);
+        console.log(profileData.displayName);
 
-    // Display user info
-    if (!profileData.displayName) {
-        document.getElementById('user-name').textContent = logUser.email.split('@')[0];
-        document.getElementById('mobile-user-name').textContent = logUser.email.split('@')[0];
-    } else {
-        document.getElementById('user-name').textContent = profileData.displayName;
-        document.getElementById('mobile-user-name').textContent = profileData.displayName;
-    }   
+        // Display user info
+        if (!profileData.displayName) {
+            document.getElementById('user-name').textContent = logUser.email.split('@')[0];
+            document.getElementById('mobile-user-name').textContent = logUser.email.split('@')[0];
+        } else {
+            document.getElementById('user-name').textContent = profileData.displayName;
+            document.getElementById('mobile-user-name').textContent = profileData.displayName;
+        }
 
-    // Profile dropdown functionality
-    const profileTrigger = document.getElementById('profile-dropdown-trigger');
-    const profileDropdown = document.getElementById('profile-dropdown');
+        // User is logged in - show profile, hide login/register
+        document.getElementById('logged-out-buttons').classList.add('hidden');
+        document.getElementById('logged-in-profile').classList.add('md:flex');
 
-    if (profileTrigger && profileDropdown) {
-        // Toggle dropdown on profile click
-        profileTrigger.addEventListener('click', (e) => {
-            e.stopPropagation();
-            profileDropdown.classList.toggle('hidden');
-            profileDropdown.classList.toggle('show');
-        });
+        document.getElementById('mobile-logged-out-buttons').classList.add('hidden');
+        document.getElementById('mobile-dash-set').classList.remove('hidden');
+        document.getElementById('mobile-logged-in-profile').classList.remove('hidden');
+        document.getElementById('mobile-logout-button').classList.remove('hidden');
 
-        // Close dropdown when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!profileDropdown.contains(e.target)) {
-                profileDropdown.classList.add('hidden');
-                profileDropdown.classList.remove('show');
-            }
-        });
+        // Profile dropdown functionality
+        const profileTrigger = document.getElementById('profile-dropdown-trigger');
+        const profileDropdown = document.getElementById('profile-dropdown');
 
-        // Close dropdown when clicking on menu items
-        profileDropdown.querySelectorAll('a, button').forEach(item => {
-            item.addEventListener('click', () => {
-                profileDropdown.classList.add('hidden');
-                profileDropdown.classList.remove('show');
+        if (profileTrigger && profileDropdown) {
+            // Toggle dropdown on profile click
+            profileTrigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                profileDropdown.classList.toggle('hidden');
+                profileDropdown.classList.toggle('show');
             });
-        });
-    }
 
-    const discount = hasDiscount;
-    console.log(hasDiscount, '', discount)
-    if (discount === "300") {
-        document.getElementById('disPrice').textContent = '99'
-        document.getElementById('disPercent').textContent = '83.5%'
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!profileDropdown.contains(e.target)) {
+                    profileDropdown.classList.add('hidden');
+                    profileDropdown.classList.remove('show');
+                }
+            });
 
-    } else if (discount === "200") {
-        document.getElementById('disPrice').textContent = '199'
-        document.getElementById('disPercent').textContent = '66.8%'
+            // Close dropdown when clicking on menu items
+            profileDropdown.querySelectorAll('a, button').forEach(item => {
+                item.addEventListener('click', () => {
+                    profileDropdown.classList.add('hidden');
+                    profileDropdown.classList.remove('show');
+                });
+            });
+        }
 
-    } else if (discount === "150") {
-        document.getElementById('disPrice').textContent = '249'
-        document.getElementById('disPercent').textContent = '58.4%'
-    }
+        const discount = hasDiscount;
+        console.log(hasDiscount, '', discount)
+        if (discount === "300") {
+            document.getElementById('disPrice').textContent = '99'
+            document.getElementById('disPercent').textContent = '83.5%'
 
-    // Load user-specific data from Supabase instead of localStorage
-    //await loadPurchasedCourses(user.id);
+        } else if (discount === "200") {
+            document.getElementById('disPrice').textContent = '199'
+            document.getElementById('disPercent').textContent = '66.8%'
+
+        } else if (discount === "150") {
+            document.getElementById('disPrice').textContent = '249'
+            document.getElementById('disPercent').textContent = '58.4%'
+        }
+
+        document.getElementById('cta').classList.add('hidden');
 
 
+        // Set up logout
+        const logoutButtons = [
+            document.getElementById('logout-button'),
+            document.getElementById('mobile-logout-button')
+        ];
 
-    // Set up logout
-    const logoutButtons = [
-        document.getElementById('logout-button'),
-        document.getElementById('mobile-logout-button')
-    ];
+        const logout = () => {
+            client.auth.signOut()
+                .then(() => window.location.href = 'index.html');
+        };
 
-    const logout = () => {
-        client.auth.signOut()
-            .then(() => window.location.href = 'index.html');
-    };
-
-    logoutButtons.forEach(btn => {
-        if (btn) btn.addEventListener('click', logout);
-    });
-
-    // Display purchased courses
-    const purchasedCourses = JSON.parse(localStorage.getItem('fengshui_purchased_courses') || '[]');
-    const myCoursesContainer = document.getElementById('my-courses-container');
-    const noCoursesMessage = document.getElementById('no-courses-message');
-    const courseCardTemplate = document.getElementById('course-card-template');
-    const continueSection = document.getElementById('continue-learning-section');
-
-    if (purchasedCourses.length > 0) {
-        // Hide the "no courses" message
-        noCoursesMessage.classList.add('hidden');
-
-        // Show the continue learning section
-        continueSection.classList.remove('hidden');
-
-        // Display purchased courses
-        purchasedCourses.forEach((course, index) => {
-            // Clone the template
-            const courseCard = courseCardTemplate.cloneNode(true);
-            courseCard.classList.remove('hidden');
-
-            // Update course information
-            courseCard.querySelector('h3').textContent = course;
-
-            // Generate random progress (for demo purposes)
-            const progress = index === 0 ? 25 : Math.floor(Math.random() * 100);
-            courseCard.querySelector('.bg-sky-blue').style.width = `${progress}%`;
-            courseCard.querySelector('.text-gray-500').textContent = `Progress: ${progress}%`;
-
-            // Add to container
-            myCoursesContainer.appendChild(courseCard);
+        logoutButtons.forEach(btn => {
+            if (btn) btn.addEventListener('click', logout);
         });
     }
 });
+
+// Category button toggle
+//const categoryBtns = document.querySelectorAll('.category-btn');
+
+//categoryBtns.forEach(btn => {
+//    btn.addEventListener('click', () => {
+//        // Reset all buttons
+//        categoryBtns.forEach(b => {
+//            b.classList.remove('bg-sky-blue', 'text-white');
+//            b.classList.add('bg-gray-200', 'text-gray-700');
+//        });
+
+//        // Set active button
+//        btn.classList.remove('bg-gray-200', 'text-gray-700');
+//        btn.classList.add('bg-sky-blue', 'text-white');
+//    });
+//});
+
+// FAQ toggle
+const faqToggles = document.querySelectorAll('.faq-toggle');
+
+faqToggles.forEach(toggle => {
+    toggle.addEventListener('click', () => {
+        const content = toggle.nextElementSibling;
+        const icon = toggle.querySelector('i');
+
+        content.classList.toggle('hidden');
+        icon.classList.toggle('rotate-180');
+    });
+});
+
+
 
 if (hasDiscount && discountExpiry) {
     // Show banner with discount info
