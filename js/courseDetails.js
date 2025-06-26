@@ -43,7 +43,6 @@ const afterEnroll = document.getElementById('afterEnroll');
 document.addEventListener('DOMContentLoaded', async () => {
     // Check auth status
     const { data: { user }, error } = await client.auth.getUser();
-    debugger;
     logUser = user;
     if (logUser) {
         const { data: profileData, error: profileError } = await client
