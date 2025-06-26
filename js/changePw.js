@@ -14,7 +14,7 @@ const accessToken = urlParams.get('access_token');
 const refreshToken = urlParams.get('refresh_token');
 
 if (!accessToken || !refreshToken) {
-    document.getElementById('message').textContent = 'Invalid password reset link';
+    alert('Invalid password reset link');
     document.querySelector('button').disabled = true;
 } else {
     // Set the session for password update
@@ -45,7 +45,7 @@ document.getElementById('changePwForm').addEventListener('submit', async () => {
 
         if (error) throw error;
         alert('Password updated successfully! Redirecting...');
-        setTimeout(() => window.location.href = 'index.html', 2000);
+        setTimeout(() => window.location.href = 'login.html', 2000);
     } catch (error) {
         alert('Error: ', error);
     }
