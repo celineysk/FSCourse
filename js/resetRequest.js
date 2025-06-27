@@ -71,20 +71,6 @@ verifyForm.addEventListener('submit', async (e) => {
     }
 });
 
-try {
-    // Method 1: Standard approach (v2)
-    let { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password`,
-    });
-
-    
-
-    alert('Reset link sent! Check your email.');
-} catch (error) {
-    console.error('Error:', error);
-    alert(`Failed: ${error.message}`);
-}
-
 function startCooldown() {
     cooldownActive = true;
     verifyBtn.classList.add('text-gray-400', 'cursor-not-allowed');
