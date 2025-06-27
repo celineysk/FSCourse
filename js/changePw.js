@@ -1,4 +1,5 @@
 const client = supabase.createClient('https://tvecqrnbaytkqwhzifsd.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2ZWNxcm5iYXl0a3F3aHppZnNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg5NjI4NzksImV4cCI6MjA2NDUzODg3OX0.9p3oUwc8ed0uHz4HiobN7R4A_H6c86fsFvj2XcqLy3E')
+const supabaseURL = 'https://tvecqrnbaytkqwhzifsd.supabase.co';
 
 // Mobile menu toggle
 const mobileMenuButton = document.getElementById('mobile-menu-button');
@@ -40,6 +41,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         alert('Missing recovery parameters');
         setTimeout(() => window.location.href = 'resetRequest.html', 3000);
     }
+
+    // Add this before your password reset call
+    console.log('Testing auth endpoint reachability...');
+    const test = await fetch(`${supabaseUrl}/auth/v1/recover`, {
+        method: 'OPTIONS'
+    });
+    console.log('Password reset endpoint status:', test.status);
+
 });
 
 document.getElementById('changePwForm').addEventListener('submit', async () => {
@@ -60,7 +69,6 @@ document.getElementById('changePwForm').addEventListener('submit', async () => {
         const { error } = await client.auth.updateUser({
             password: newPassword
         });
-        console.log(error);
 
         if (error) throw error;
         alert('Password updated successfully! Redirecting...');
