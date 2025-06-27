@@ -36,6 +36,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('changePwForm').style.display = 'block';
     } else {
         // Not a valid recovery link
+        alert('Not a valid recovery link! Please contact support!');
         window.location.href = 'resetRequest.html';
     }
 });
