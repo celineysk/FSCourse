@@ -7,22 +7,35 @@ const mobileMenu = document.getElementById('mobile-menu');
 mobileMenuButton.addEventListener('click', () => {
     mobileMenu.classList.toggle('hidden');
 });
+
+
 debugger;
-// Check for password recovery token
+
+// Check for password recovery tokens
 const urlParams = new URLSearchParams(window.location.search);
+const type = urlParams.get('type');
 const accessToken = urlParams.get('access_token');
 const refreshToken = urlParams.get('refresh_token');
 console.log('ac', accessToken, ' rt: ', refreshToken);
 
-if (!accessToken || !refreshToken) {
-    alert('Invalid password reset link');
-    document.querySelector('button').disabled = true;
-} else {
+if (type === 'recovery' && accessToken && refreshToken) {
     // Set the session for password update
-    supabase.auth.setSession({
+    const { error } = await client.auth.setSession({
         access_token: accessToken,
         refresh_token: refreshToken
     });
+
+    if (error) {
+        alert('Invalid or expired link');
+        window.location.href = 'resetRequest.html';
+        return;
+    }
+
+    // Show password update form
+    document.getElementById('changePwForm').style.display = 'block';
+} else {
+    // Not a valid recovery link
+    window.location.href = 'resetRequest.html';
 }
 
 document.getElementById('changePwForm').addEventListener('submit', async () => {
