@@ -12,6 +12,7 @@ debugger;
 const urlParams = new URLSearchParams(window.location.search);
 const accessToken = urlParams.get('access_token');
 const refreshToken = urlParams.get('refresh_token');
+console.log('ac', accessToken, ' rt: ', refreshToken);
 
 if (!accessToken || !refreshToken) {
     alert('Invalid password reset link');
