@@ -198,172 +198,97 @@ applyDiscountBtn.addEventListener('click', () => {
     discountApplied.classList.remove('hidden');
 });
 
+let paypalButtonsInstance = null;
+let modalObserver = null;
+
 enrollButton.addEventListener('click', () => {
-    // Check if user is logged in
     if (!logUser) {
-        // Redirect to login page
         window.location.href = 'login.html';
         return;
-
     }
+
     paymentModal.classList.remove('hidden');
-
-    const payment = coursePrice - discountValue;
-
-    if (window.paypal) {
-        // Track modal state
-        let modalOpen = false;
-
-        // MutationObserver for modal changes
-        const observer = new MutationObserver(function (mutations) {
-            mutations.forEach(function (mutation) {
-                if (mutation.attributeName === 'class') {
-                    const modal = document.querySelector('.paypal-checkout-sandbox');
-                    if (modal) {
-                        if (modal.classList.contains('zoid-visible')) {
-                            document.body.classList.add('paypal-modal-active');
-                            modalOpen = true;
-                            // Additional fixes for iOS
-                            if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-                                document.body.style.position = 'fixed';
-                                document.body.style.top = `-${window.scrollY}px`;
-                            }
-
-                            // Ensure card fields container has proper height
-                            const cardFields = document.querySelector('.card-fields-container, .paypal-card-fields');
-                            if (cardFields) {
-                                cardFields.style.minHeight = '400px';
-                            }
-                        } else {
-                            document.body.classList.remove('paypal-modal-active');
-                            modalOpen = false;
-                            // Restore iOS scroll position
-                            if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-                                const scrollY = document.body.style.top;
-                                document.body.style.position = '';
-                                document.body.style.top = '';
-                                window.scrollTo(0, parseInt(scrollY || '0') * -1);
-                            }
-                        }
-                    }
-                }
-            });
-        });
-
-        function initPayPal() {
-            paypal.Buttons({
-                style: {
-                    height: 48,
-                    layout: 'vertical',
-                    fundingicons: 'true',
-                    // Additional styling for card fields
-                    cardFields: {
-                        fontSize: '16px',
-                        color: '#3A3A3A'
-                    }
-                },
-                // Force modal behavior for card payments
-                paymentMethod: {
-                    payerSelected: 'paypal',
-                    payeePreferred: 'immutable'
-                },
-                // Maintain modal state
-                onShippingChange: (data, actions) => actions.resolve(),
-
-                createOrder: function (data, actions) {
-                    return actions.order.create({
-                        purchase_units: [{
-                            amount: {
-                                value: payment,
-                                breakdown: {
-                                    item_total: { value: payment, currency_code: 'EUR' }
-                                }
-                            },
-                            items: [{
-                                name: "MONEY MAGNET",
-                                unit_amount: { value: payment, currency_code: 'EUR' },
-                                quantity: "1"
-                            }]
-                        }]
-                    });
-                },
-                onApprove: function (data, actions) {
-                    // 1. First capture payment and close modal
-                    return actions.order.capture().then(function (details) {
-                        paymentModal.classList.add('hidden');
-
-                        // 2. Process Supabase update (non-async)
-                        client
-                            .from('Profiles')
-                            .update({
-                                enrollTime: new Date().toISOString(),
-                                paymentID: details.id
-                            })
-                            .eq('email', logUser.email)
-                            .then(function (enrollData) {
-                                // 3. On success
-                                alert('Transaction completed!');
-                                beforeEnroll.classList.add('hidden');
-                                afterEnroll.classList.remove('hidden');
-                                window.location.reload();
-                            })
-                            .catch(function (error) {
-                                // 4. On Supabase error only
-                                console.error('Supabase error:', error);
-                                alert('Payment succeeded but record update failed. Please contact support.');
-                            });
-
-                        // 5. Resolve immediately for PayPal (don't wait for Supabase)
-                        return Promise.resolve();
-                    }).catch(function (error) {
-                        // 6. Handle PayPal capture errors
-                        console.error('Payment capture failed:', error);
-                        paymentModal.classList.add('hidden');
-                        alert('Payment processing failed. Please try again.');
-                    });
-                },
-                onError: function (err) {
-                    console.error('PayPal error:', err);
-                    document.body.classList.remove('paypal-modal-active');
-                }
-            }).render('#paypal-button-container');
-
-            // Set up observer after slight delay
-            setTimeout(() => {
-                const modalContainer = document.querySelector('.paypal-checkout-sandbox');
-                if (modalContainer) {
-                    observer.observe(modalContainer, {
-                        attributes: true,
-                        attributeFilter: ['class']
-                    });
-
-                    // Add CSS for card fields
-                    const style = document.createElement('style');
-                    style.textContent = `
-                    .card-fields-container, .paypal-card-fields {
-                        min-height: 400px !important;
-                        transition: height 0.3s ease !important;
-                    }
-                    #card-fields-container iframe {
-                        height: 100% !important;
-                    }
-                    .paypal-modal-active {
-                        overflow: hidden !important;
-                    }
-                `;
-                    document.head.appendChild(style);
-                }
-            }, 1000);
-        }
-
-        // Initialize when SDK is ready
-        if (window.paypal.Buttons) {
-            initPayPal();
-        } else {
-            window.addEventListener('paypal-sdk-ready', initPayPal);
-        }
-    }
+    initPayPal();
 });
+
+function initPayPal() {
+    // Cleanup existing instance
+    cleanupPayPalButtons();
+
+    // Initialize new buttons
+    paypalButtonsInstance = paypal.Buttons({
+        style: {
+            height: 48,
+            layout: 'vertical'
+        },
+        createOrder: function (data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: (coursePrice - discountValue).toFixed(2),
+                        currency_code: 'EUR'
+                    }
+                }]
+            });
+        },
+        onApprove: function (data, actions) {
+            return actions.order.capture().then(function (details) {
+                // Handle successful payment
+            });
+        },
+        onCancel: function (data) {
+            cleanupPayPalButtons();
+        },
+        onError: function (err) {
+            cleanupPayPalButtons();
+        }
+    }).render('#paypal-button-container');
+
+    // Setup modal observer
+    setupModalObserver();
+}
+
+function setupModalObserver() {
+    if (modalObserver) modalObserver.disconnect();
+
+    modalObserver = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+            if (mutation.attributeName === 'class') {
+                const modal = document.querySelector('.paypal-checkout-sandbox');
+                if (modal && !modal.classList.contains('zoid-visible')) {
+                    cleanupPayPalButtons();
+                }
+            }
+        });
+    });
+
+    const modalContainer = document.querySelector('.paypal-checkout-sandbox');
+    if (modalContainer) {
+        modalObserver.observe(modalContainer, {
+            attributes: true,
+            attributeFilter: ['class']
+        });
+    }
+}
+
+function cleanupPayPalButtons() {
+    if (paypalButtonsInstance) {
+        try {
+            paypalButtonsInstance.close();
+        } catch (e) {
+            console.warn('PayPal buttons cleanup warning:', e);
+        }
+        document.getElementById('paypal-button-container').innerHTML = '';
+        paypalButtonsInstance = null;
+    }
+
+    if (modalObserver) {
+        modalObserver.disconnect();
+        modalObserver = null;
+    }
+
+    document.body.classList.remove('paypal-modal-active');
+}
 
 
 closePayment.addEventListener('click', () => {
