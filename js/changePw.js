@@ -60,6 +60,7 @@ document.getElementById('changePwForm').addEventListener('submit', async () => {
         const { error } = await client.auth.updateUser({
             password: newPassword
         });
+        console.log(error);
 
         if (error) throw error;
         alert('Password updated successfully! Redirecting...');
