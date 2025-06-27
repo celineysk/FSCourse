@@ -12,32 +12,34 @@ mobileMenuButton.addEventListener('click', () => {
 debugger;
 document.addEventListener('DOMContentLoaded', async () => {
 
-    // Check for password recovery tokens
-    const urlParams = new URLSearchParams(window.location.search);
-    const type = urlParams.get('type');
-    const accessToken = urlParams.get('access_token');
-    const refreshToken = urlParams.get('refresh_token');
+    // Parse URL hash parameters
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    const type = hashParams.get('type');
+    const accessToken = hashParams.get('access_token');
+    const refreshToken = hashParams.get('refresh_token');
     console.log('ac', accessToken, ' rt: ', refreshToken);
 
     if (type === 'recovery' && accessToken && refreshToken) {
-        // Set the session for password update
-        const { error } = await client.auth.setSession({
-            access_token: accessToken,
-            refresh_token: refreshToken
-        });
+        try {
+            // Set the session first
+            const { error: sessionError } = await client.auth.setSession({
+                access_token: accessToken,
+                refresh_token: refreshToken
+            });
 
-        if (error) {
-            alert('Invalid or expired link');
-            window.location.href = 'resetRequest.html';
-            return;
+            if (sessionError) throw sessionError;
+
+            // Show the password update form
+            document.getElementById('changePwForm').style.display = 'block';
+
+        } catch (error) {
+            console.error('Session error:', error);
+            alert('Invalid or expired recovery link');
+            setTimeout(() => window.location.href = 'resetRequest.html', 3000);
         }
-
-        // Show password update form
-        document.getElementById('changePwForm').style.display = 'block';
     } else {
-        // Not a valid recovery link
-        alert('Not a valid recovery link! Please contact support!');
-        window.location.href = 'resetRequest.html';
+        alert('Missing recovery parameters');
+        setTimeout(() => window.location.href = 'resetRequest.html', 3000);
     }
 });
 
