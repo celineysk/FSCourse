@@ -40,11 +40,29 @@ verifyForm.addEventListener('submit', async (e) => {
         }
         debugger;
         const { error: resetError } = await client.auth.resetPasswordForEmail(verEmail, {
-            redirectTo: `${window.location.origin}/changePw.html?type=recovery`
-            
+            redirectTo: `${window.location.origin}/changePw.html?type=recovery`,
+            captchaToken: null            
         });
 
-        if (resetError) throw resetError;
+        // If v2 fails, try v1 method
+        if (resetError) {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/v1/recover`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+                    'Authorization': `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`
+                },
+                body: JSON.stringify({
+                    email: email,
+                    redirect_to: `${window.location.origin}/reset-password`
+                })
+            });
+
+            if (!response.ok) throw new Error(await response.text());
+        }
+
+        //if (resetError) throw resetError;
         alert('Password reset link sent! Check your email.');
         startCooldown();
 
@@ -52,6 +70,20 @@ verifyForm.addEventListener('submit', async (e) => {
         alert(`Error encountered: ${error.message}`);
     }
 });
+
+try {
+    // Method 1: Standard approach (v2)
+    let { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+    });
+
+    
+
+    alert('Reset link sent! Check your email.');
+} catch (error) {
+    console.error('Error:', error);
+    alert(`Failed: ${error.message}`);
+}
 
 function startCooldown() {
     cooldownActive = true;
