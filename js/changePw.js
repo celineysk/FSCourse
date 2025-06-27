@@ -9,7 +9,6 @@ mobileMenuButton.addEventListener('click', () => {
 });
 
 
-debugger;
 document.addEventListener('DOMContentLoaded', async () => {
 
     // Parse URL hash parameters
@@ -56,7 +55,7 @@ document.getElementById('changePwForm').addEventListener('submit', async () => {
         alert('Password must be at least 8 characters');
         return;
     }
-
+    debugger;
     try {
         const { error } = await client.auth.updateUser({
             password: newPassword
