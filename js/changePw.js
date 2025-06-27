@@ -10,8 +10,8 @@ mobileMenuButton.addEventListener('click', () => {
 });
 
 
-document.addEventListener('DOMContentLoaded', async () => {
-
+document.addEventListener('DOMContentLoaded', async (e) => {
+    e.preventDefault();
     // Parse URL hash parameters
     const hashParams = new URLSearchParams(window.location.hash.substring(1));
     const type = hashParams.get('type');
@@ -51,7 +51,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 });
 
-document.getElementById('changePwForm').addEventListener('submit', async () => {
+document.getElementById('changePwForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
     const newPassword = document.getElementById('newPw').value;
     const confirmPassword = document.getElementById('conNewPw').value;
 
