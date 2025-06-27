@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Details - Professional Feng Shui Courses</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Permissions-Policy" content="geolocation=(self), fullscreen=(self)">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/main.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-md fixed w-full top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="index.html" class="flex items-center">
+                <i class="fas fa-yin-yang text-sky-blue text-2xl mr-2"></i>
+                <span class="text-xl font-semibold text-gray-800">Miss Yeoh Feng Shui</span>
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex space-x-6">
+                <a href="index.html" class="text-gray-800 hover:text-sky-blue-dark font-medium">Home</a>
+                <a href="courses.html" class="text-gray-800 hover:text-sky-blue-dark font-medium">Courses</a>
+                <a href="index.html#about" class="text-gray-800 hover:text-sky-blue-dark font-medium">About</a>
+                <a href="#contact" class="text-gray-800 hover:text-sky-blue-dark font-medium">Contact</a>
+            </nav>
+
+            <div class="flex items-center space-x-4">
+                <div id="logged-out-buttons">
+                    <a href="login.html" class="hidden md:inline-block px-4 py-2 text-sky-blue-dark border border-sky-blue-dark rounded hover:bg-sky-blue hover:text-white transition-all">Login</a>
+                    <a href="register.html" class="hidden md:inline-block px-4 py-2 bg-sky-blue text-white rounded hover:bg-sky-blue-dark transition-all">Register</a>
+                </div>
+                <!-- Logged in state (hidden by default) -->
+                <div id="logged-in-profile" class="hidden items-center mr-6">
+                    <div id="profile-dropdown-trigger" class="flex items-center mr-6">
+                        <img src="css/default_profile.jpg" alt="User" class="w-8 h-8 rounded-full object-cover mr-2">
+                        <span class="text-gray-800" id="user-name">User</span>
+                    </div>
+
+                    <!-- Dropdown menu (hidden by default) -->
+                    <div id="profile-dropdown" class="hidden absolute right-[210px] top-full mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                        <a href="dashboard.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Dashboard</a>
+                        <a href="settings.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Settings</a>
+                    </div>
+                    <button id="logout-button" class="inline-block px-4 py-2 text-sky-blue-dark border border-sky-blue-dark rounded hover:bg-sky-blue hover:text-white transition-all">Logout</button>
+
+                </div>
+
+                <!-- Mobile menu button -->
+                <button id="mobile-menu-button" class="md:hidden text-gray-700">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg absolute w-full">
+            <div class="px-4 py-4 space-y-3">
+                <div class="hidden space-y-3" id="mobile-dash-set">
+                    <a href="dashboard.html" class="block text-gray-800 hover:text-sky-blue-dark font-medium">Dashboard</a>
+                    <a href="settings.html" class="block text-gray-800 hover:text-sky-blue-dark font-medium">Settings</a>
+                </div>
+                <a href="#index" class="block text-gray-800 hover:text-sky-blue-dark font-medium">Home</a>
+                <a href="#courses" class="block text-gray-800 hover:text-sky-blue-dark font-medium">Courses</a>
+                <a href="index.html#about" class="block text-gray-800 hover:text-sky-blue-dark font-medium">About</a>
+                <a href="#contact" class="block text-gray-800 hover:text-sky-blue-dark font-medium">Contact</a>
+                <div id="mobile-logged-out-buttons" class="pt-2 flex space-x-2">
+                    <a href="login.html" class="w-1/2 text-center px-4 py-2 text-sky-blue-dark border border-sky-blue-dark rounded hover:bg-sky-blue hover:text-white transition-all">Login</a>
+                    <a href="register.html" class="w-1/2 text-center px-4 py-2 bg-sky-blue text-white rounded hover:bg-sky-blue-dark transition-all">Register</a>
+                </div>
+
+                <!-- Logged in mobile profile (hidden by default) -->
+                <div id="mobile-logged-in-profile" class="hidden">
+                    <div class="flex items-center mb-2">
+                        <img src="css/default_profile.jpg" alt="User" class="w-8 h-8 rounded-full object-cover mr-2">
+                        <span class="text-gray-800" id="mobile-user-name">User</span>
+                    </div>
+                </div>
+
+                <!-- Logged in logout button (hidden by default) -->
+                <button id="mobile-logout-button" class="hidden w-full text-center px-4 py-2 text-sky-blue-dark border border-sky-blue-dark rounded hover:bg-sky-blue hover:text-white transition-all border-4 border-red-500">Logout</button>
+
+            </div>
+        </div>
+    </header>
+
+    <!-- Discount Banner (if available) -->
+    <div id="discount-banner" class="mt-[50px] md:mt-[60px] bg-red-600 text-white p-4 hidden">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center mb-3 md:mb-0">
+                <i class="fas fa-gift text-yellow-300 text-xl mr-3"></i>
+                <p class="font-medium">
+                    You have a special discount:
+                    <span class="font-bold">€</span>
+                    <span id="banner-discount" class="font-bold">300</span>
+                </p>
+            </div>
+            <div class="flex items-center">
+                <p class="mr-3">Expires in: <span id="banner-countdown" class="font-bold">00:59:59</span></p>
+                <button id="apply-discount" class="px-4 py-1 bg-white text-red-600 rounded font-medium hover:bg-gray-100 transition-all">Apply Now</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Course Header -->
+    <section class="pt-24 md:pt-20 pb-8 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row">
+                <!-- Course Info -->
+                <div class="md:w-2/3 md:pr-8">
+                    <span class="px-2 py-1 bg-sky-blue-light text-sky-blue-dark text-xs font-medium rounded mb-3 inline-block">Beginner</span>
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">A MONEY MAGNET with Scientific Feng Shui in 24 Hours!</h1>
+
+                    <p class="text-lg text-gray-600 mb-6">Learn HOW to BOOST Company and HOME Prosperity, with Scientific Feng Shui and How to Arrange Wealth-Attracting Ornaments</p>
+
+                    <div class="flex flex-wrap gap-4 mb-6">
+                        <div class="flex items-center">
+                            <i class="fas fa-star text-yellow-400 mr-1"></i>
+                            <span class="text-gray-700 font-medium">4.9</span>
+                            <span class="text-gray-500 ml-1">(128 reviews)</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-users text-gray-500 mr-1"></i>
+                            <span class="text-gray-700">5100 students</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-clock text-gray-500 mr-1"></i>
+                            <span class="text-gray-700">0.5 hours</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-calendar-alt text-gray-500 mr-1"></i>
+                            <span class="text-gray-700">Last updated May 2024</span>
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <p class="text-gray-700 mb-2">Created by:</p>
+                        <div class="flex items-center">
+                            <img src="css/about miss yeoh pic.jpg" alt="Miss Yeoh" class="w-12 h-12 rounded-full object-cover mr-3">
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Miss Yeoh</h3>
+                                <p class="text-gray-600 text-sm">Feng Shui Master & Consultant</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Course Preview & Purchase -->
+                <div class="md:w-1/3">
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden sticky top-20">
+                        <div class="relative mb-8 overflow-hidden bg-black" style="padding-top: calc(56.25% + 40px);">
+                            <iframe src="https://drive.google.com/file/d/1CyQqx-VvH3KroQN7KL646cVPRjx8m5c4/preview"
+                                    class="absolute top-0 left-0 w-full h-full scale-[1.02] origin-center"
+                                    allow="autoplay"
+                                    frameborder="0"
+                                    allowfullscreen>
+                            </iframe>
+                        </div>
+
+                        <div class="p-6">
+                            <div id="beforeEnroll">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div>
+                                        <span class="text-3xl font-bold text-red-500">€</span>
+                                        <span id="discountPrice" class="text-3xl font-bold text-red-500">399</span>
+                                        <span id="original-price" class="text-lg text-gray-500 line-through ml-2">€599</span>
+                                    </div>
+                                    <span id="discountPercent" class="bg-red-100 text-red-600 px-2 py-1 rounded text-sm font-medium">-34%</span>
+                                </div>
+                                <p id="discount-applied" class="text-green-600 font-medium mb-4 hidden">
+                                    Discount applied:
+                                    <span>€</span>
+                                    <span id="discount-amount">300</span>
+                                </p>
+                                <div class="mb-4">
+                                    <button id="enroll-button" class="w-full bg-sky-blue text-white py-3 rounded-md font-medium hover:bg-sky-blue-dark transition-all">Enroll Now</button>
+                                </div>
+                            </div>
+                            <div id="afterEnroll" class="hidden">
+                                <div class="mb-4">
+                                    <button id="learn-button" class="w-full bg-sky-blue text-white py-3 rounded-md font-medium hover:bg-sky-blue-dark transition-all">Learn Now</button>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <h4 class="font-semibold text-gray-800 mb-2">This course includes:</h4>
+                                <ul class="space-y-2">
+                                    <li class="flex items-start">
+                                        <i class="fas fa-video text-sky-blue mt-1 mr-3"></i>
+                                        <span class="text-gray-600">0.5 hours of on-demand video</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-infinity text-sky-blue mt-1 mr-3"></i>
+                                        <span class="text-gray-600">Full lifetime access</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-mobile-alt text-sky-blue mt-1 mr-3"></i>
+                                        <span class="text-gray-600">Access on any devices</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!--<div class="flex justify-between">
+                                <button class="text-sky-blue-dark hover:underline flex items-center">
+                                    <i class="fas fa-share-alt mr-2"></i>
+                                    Share
+                                </button>
+                                <button class="text-sky-blue-dark hover:underline flex items-center">
+                                    <i class="far fa-heart mr-2"></i>
+                                    Wishlist
+                                </button>
+                                <button class="text-sky-blue-dark hover:underline flex items-center">
+                                    <i class="fas fa-gift mr-2"></i>
+                                    Gift
+                                </button>
+                            </div>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Course Content Tabs -->
+    <section class="py-8 bg-white border-t border-gray-200">
+        <div class="container mx-auto px-4">
+            <div class="flex overflow-x-auto pb-2 mb-4">
+                <button data-section="overview" class="content-tab px-6 py-2 font-medium text-gray-800 border-b-2 border-sky-blue whitespace-nowrap">Overview</button>
+                <button data-section="curriculum" class="content-tab px-6 py-2 font-medium text-gray-500 border-b-2 border-transparent whitespace-nowrap">Curriculum</button>
+            </div>
+
+            <!-- Overview Tab Content -->
+            <div class="tab-content">
+                <div id="overviewTab" class="tabsContent max-w-3xl">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">What You'll Learn</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                        <div class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span class="text-gray-700">What is Feng Shui.</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span class="text-gray-700">Key TIPS for Feng Shui Success</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span class="text-gray-700">WHY Fortune 500 Companies Use Feng Shui</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span class="text-gray-700">HOW to arrange wealth-attracting ornaments!</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span class="text-gray-700">Master your space without the Feng Shui Master!</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span class="text-gray-700">Understanding Your Personal Bazi Five Elements.</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span class="text-gray-700">How to adjust Your Bazi Five Elements Energy through Feng Shui.</span>
+                        </div>
+
+
+                        <div class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span class="text-gray-700">HOW to Harness Feng Shui To Enhance YOUR FORTUNE.</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span class="text-gray-700">How To Use Nine Purple White Flying Stars.</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span class="text-gray-700">How to boost Your Wealth, Career advancement, Attracting Benefactors, Academic success, and Romantic Relationships.</span>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Requirements</h2>
+                    <div class="space-y-2 mb-8">
+                        <div class="flex items-start">
+                            <i class="fas fa-circle text-sky-blue text-xs mt-1.5 mr-3"></i>
+                            <span class="text-gray-700">No prior knowledge of Feng Shui is required</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-circle text-sky-blue text-xs mt-1.5 mr-3"></i>
+                            <span class="text-gray-700">Basic understanding of home layout and design is helpful but not necessary</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-circle text-sky-blue text-xs mt-1.5 mr-3"></i>
+                            <span class="text-gray-700">Open mind and willingness to apply new concepts</span>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Course Description</h2>
+                    <div class="space-y-4 mb-8">
+                        <p class="text-gray-700">Through this course, you will Learn What Feng Shui truly is and HOW to Harness Feng Shui to enhance your fortune, including Wealth accumulation ,Career advancement , Attracting benefactors , Academic success , Romantic relationships and other key areas of Life. </p>
+
+                        <p class="text-gray-700">This practical system makes professional Feng Shui techniques accessible to everyone, allowing you to create positive energy in your living and working spaces. Whether you are a complete beginner or looking to deepen your knowledge, these modules will guide you step-by-step in applying these ancient principles to modern life.</p>
+
+                        <p class="font-bold text-gray-700">With 15 years of experience in corporate feng shui consulting and residential space harmonization, she blends practical insights with ancient wisdom as a successful entrepreneur. Specializing in feng shui energy, crystal healing, manifestation principles, and holistic business-wellness integration, she excels at distilling complex systems into actionable life strategies. A firm believer in the democratization of knowledge—when expertise is no longer gatekept, everyone can access the tools to transform their lives. </p>
+
+                        <p class="font-bold text-gray-700">Now, she is dedicated to building a structured knowledge system, offering clear and accessible teachings to help learners quickly grasp the essence and apply these timeless principles for tangible results in daily life.</p>
+                    </div>
+
+                </div>
+
+                <div id="curriculumTab" class="tabsContent hidden max-w-3xl">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">What Topics are Included in this Course</h2>
+                    <div class="space-y-2 mb-8">
+                        <div class="flex items-start">
+                            <i class="fas fa-user-check text-sky-blue mr-3"></i>
+                            <span class="text-gray-700 font-bold">What is Feng Shui?</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-gray-700">- What is "Destiny"? What is "Luck"?</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-gray-700">- Why do others get promoted or raises despite my hard work?</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-gray-700">- Why do wealthy individuaals worldwide hire Feng Shui masters at high prices?</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-user-check text-sky-blue mr-3"></i>
+                            <span class="text-gray-700 font-bold">Understanding Your Bazi Five Elements</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-gray-700">- How to identify your "Life Master"?</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-gray-700">- How to adjust Five Elements energy through Feng Shui?</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-user-check text-sky-blue mr-3"></i>
+                            <span class="text-gray-700 font-bold">Metal Destiny Individuals</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-gray-700">- Wealth Direction</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-gray-700">- Career Direction</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-gray-700">- Peach Blossom (Romance) Direction</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-gray-700">- Academic / Wisdom Direction</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-user-check text-sky-blue mr-3"></i>
+                            <span class="text-gray-700 font-bold">Wood Destiny Individuals</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-gray-700">- Career Direction</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-gray-700">- Peach Blossom (Romance) Direction</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-gray-700">- Academic / Wisdom Direction</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-user-check text-sky-blue mr-3"></i>
+                            <span class="text-gray-700 font-bold">Water Destiny Individuals</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-gray-700">- Career Direction</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-gray-700">- Peach Blossom (Romance) Direction</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-gray-700">- Academic / Wisdom Direction</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-user-check text-sky-blue mr-3"></i>
+                            <span class="text-gray-700 font-bold">Fire Destiny Individuals</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-gray-700">- Career Direction</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-gray-700">- Peach Blossom (Romance) Direction</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-gray-700">- Academic / Wisdom Direction</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-user-check text-sky-blue mr-3"></i>
+                            <span class="text-gray-700 font-bold">Earth Destiny Individuals</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-gray-700">- Career Direction</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-gray-700">- Peach Blossom (Romance) Direction</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-gray-700">- Academic / Wisdom Direction</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-user-check text-sky-blue mr-3"></i>
+                            <span class="text-gray-700 font-bold">How to Amplify Your Luck?</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-gray-700">- What is the Nine Palaces Purple White Flying Star Chart?</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-gray-700">- How to identify the Nine Palaces directions?</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-gray-700">- Meanings and applications of each Flying Stars</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Payment Options -->
+    <div id="payment-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold text-gray-800">Complete Your Purchase</h3>
+                    <button id="close-payment" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <div class="mb-6">
+                    <h4 class="font-semibold text-gray-800 mb-2">Order Summary</h4>
+                    <div class="bg-gray-50 p-4 rounded-md">
+                        <div class="flex justify-between mb-2">
+                            <span class="text-gray-700">MONEY MAGNET</span>
+                            <span class="text-gray-700">€399</span>
+                        </div>
+                        <div id="modal-discount" class="flex justify-between mb-2 text-green-600 hidden">
+                            <span>Discount</span>
+                            <div class="flex gap-0">
+                                <span>-€</span><span id="modal-discount-amount">300</span>
+                            </div>
+
+
+                        </div>
+                        <div class="border-t border-gray-200 pt-2 mt-2 flex justify-between font-medium">
+                            <span>Total</span>
+                            <div class="flex gap-0 text-2xl">
+                                <span>€</span>
+                                <span id="modal-total">399</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h4 class="font-semibold text-gray-800 mb-2">Payment Method</h4>
+                    <!--<div class="flex items-center space-y-2 p-3 border rounded-md">
+                        <input type="radio" id="paypal" name="payment" class="mr-3" checked>
+                        <label for="paypal" class="flex items-center">
+                            <i class="fab fa-paypal text-blue-600 text-xl mr-2"></i>
+                            <span>PayPal</span>
+                        </label>
+                    </div>-->
+                </div>
+
+                <div class="overflow-visible" id="paypal-button-container"></div>
+
+
+                <!--<span id="complete-purchase" class="flex-row text-center w-full bg-sky-blue text-white py-3 rounded-md font-medium hover:bg-sky-blue-dark transition-all">Complete Purchase</span>-->
+                <p class="text-center text-sm text-gray-600 mt-4">By completing your purchase, you agree to our <a href="terms.html" class="text-sky-blue-dark hover:underline">Terms of Service</a>.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Company Info -->
+                <div>
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-yin-yang text-sky-blue text-2xl mr-2"></i>
+                        <span class="text-xl font-semibold">Miss Yeoh Feng Shui</span>
+                    </div>
+                    <p class="text-gray-400 mb-4">Transforming spaces and lives through the ancient wisdom of Feng Shui.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-sky-blue transition-all"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-sky-blue transition-all"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-sky-blue transition-all"><i class="fab fa-youtube"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-sky-blue transition-all"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-400 hover:text-sky-blue transition-all">Home</a></li>
+                        <li><a href="#courses" class="text-gray-400 hover:text-sky-blue transition-all">Courses</a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-sky-blue transition-all">About</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-sky-blue transition-all">Contact</a></li>
+                        <li><a href="#faq" class="text-gray-400 hover:text-sky-blue transition-all">FAQ</a></li>
+                    </ul>
+                </div>
+
+                <!-- Courses -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Our Courses</h4>
+                    <ul class="space-y-2">
+                        <li><a href="course-details.html" class="text-gray-400 hover:text-sky-blue transition-all">Money Magnet</a></li>
+                        <li><a href="courses.html" class="text-gray-400 hover:text-sky-blue transition-all">View All Courses</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact -->
+                <div id="contact">
+                    <h4 class="text-lg font-semibold mb-4">Contact Us</h4>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope text-sky-blue mt-1 mr-3"></i>
+                            <span class="text-gray-400">missyeoh111@gmail.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-700 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm mb-4 md:mb-0">&copy; 2025 Miss Yeoh Feng Shui. All rights reserved.</p>
+                <div class="flex space-x-6">
+                    <a href="privacy.html" class="text-gray-400 hover:text-sky-blue text-sm transition-all">Privacy Policy</a>
+                    <a href="terms.html" class="text-gray-400 hover:text-sky-blue text-sm transition-all">Terms of Service</a>
+                    <a href="cookies.html" class="text-gray-400 hover:text-sky-blue text-sm transition-all">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="https://www.paypal.com/sdk/js?client-id=AffmpmmOf766xNzvckFe2ztzFZlBK8OP5QcWofFaszp2jjtFuzwRlI05SDBPRXKZW5Ezt3NsBNf6zuv7&currency=EUR"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/courseDetails.js"></script>
+</body>
+</html>
