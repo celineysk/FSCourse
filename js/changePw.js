@@ -58,7 +58,7 @@ document.getElementById('changePwForm').addEventListener('submit', async () => {
     }
 
     try {
-        const { error } = await supabase.auth.updateUser({
+        const { error } = await client.auth.updateUser({
             password: newPassword
         });
 
