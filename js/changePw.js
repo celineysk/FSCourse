@@ -7,7 +7,7 @@ const mobileMenu = document.getElementById('mobile-menu');
 mobileMenuButton.addEventListener('click', () => {
     mobileMenu.classList.toggle('hidden');
 });
-
+debugger;
 // Check for password recovery token
 const urlParams = new URLSearchParams(window.location.search);
 const accessToken = urlParams.get('access_token');
