@@ -66,6 +66,6 @@ document.getElementById('changePwForm').addEventListener('submit', async () => {
         alert('Password updated successfully! Redirecting...');
         setTimeout(() => window.location.href = 'login.html', 2000);
     } catch (error) {
-        alert('Error: ', error);
+        alert(`Error: ${error}`);
     }
 });
